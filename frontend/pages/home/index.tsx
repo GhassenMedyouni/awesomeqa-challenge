@@ -1,46 +1,54 @@
 import * as React from "react";
 import { NextPage } from "next";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+import { Typography, Grid, Box, CardActionArea, CardContent } from "@mui/material";
 import Card from "@mui/material/Card";
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
 import styles from "./home.module.css";
 import Link from "next/link";
-import CardContent from "@mui/material/CardContent";
 
 const Home: NextPage = () => {
 
-  const handleClick = async () => {
-    console.log("clicked");
+  const handleClick = async (value: string) => {
+    console.log("clicked" , value);
   };
 
   return (
-    <>
-      <Box sx={{ flexGrow: 1, mt: 15, mb: 15}}>
+      <>
         <Grid className={styles.grid}>
-            <Card className={styles.card}>
-              <CardContent>
-                <LibraryBooksIcon className={styles.icon}/>
-                <p>Knowledge Base</p>
-              </CardContent>
-            </Card>
-          <Card className={styles.card}>
-            <CardContent>
-              <SupportAgentIcon className={styles.icon}/>
-              <p>Tickets</p>
-            </CardContent>
-          </Card>
-          <Card className={styles.card}>
-            <CardContent>
-              <LightbulbIcon className={styles.icon} />
-              <p>FAQ Insights</p>
-            </CardContent>
-          </Card>
+          <Grid item xs={4}>
+              <CardActionArea className={styles.card} onClick={() => handleClick("Knowledge Base")}>
+                <CardContent>
+                    <Box className={styles.iconContainer}>
+                        <LibraryBooksIcon className={styles.icon}/>
+                    </Box>
+                    <Typography>Knowledge Base</Typography>
+                </CardContent>
+              </CardActionArea>
+          </Grid>
+          <Grid item xs={4}>
+              <CardActionArea className={styles.card} onClick={() => handleClick("Tickets")}>
+                <CardContent>
+                    <Box className={styles.iconContainer}>
+                        <SupportAgentIcon className={styles.icon} />
+                    </Box>
+                    <Typography>Tickets</Typography>
+                </CardContent>
+              </CardActionArea>
+          </Grid>
+          <Grid item xs={4}>
+              <CardActionArea className={styles.card} onClick={() => handleClick("FAQ Insights")}>
+                <CardContent>
+                    <Box className={styles.iconContainer}>
+                        <LightbulbOutlinedIcon  className={styles.icon}/>
+                    </Box>
+                    <Typography>FAQ Insights</Typography>
+                </CardContent>
+              </CardActionArea>
+          </Grid>
         </Grid>
-      </Box>
-    </>
+      </>
   );
 };
 
