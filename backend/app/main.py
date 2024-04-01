@@ -4,6 +4,8 @@ import pyrebase
 from fastapi import Depends, FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.requests import Request
 
 import firebase_admin
 from firebase_admin import credentials, auth
@@ -11,6 +13,14 @@ from .models import LoginSchema, SignUpSchema
 
 app = FastAPI(
     docs_url="/docs"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
 )
 
 if not firebase_admin._apps:
@@ -39,7 +49,8 @@ async def create_an_account(user_data: SignUpSchema):
     password = user_data.password
 
     try:
-        # TODO: Add verification to accept only emails with awsomeQa domain name ( can be other method to verify )
+        # TODO: Add verification to accept only emails with awsomeQa domain name
+        #  ( or add role system authentication )
         user = auth.create_user(
             email=email,
             password=password,
@@ -78,6 +89,16 @@ async def create_access_token(user_data: LoginSchema):
             status_code=400,
             detail="Invalid Credentials"
         )
+
+
+@app.post('/ping')
+async def validate_token(request: Request):
+    headers = request.headers
+    jwt = headers.get('authorization')
+
+    user = auth.verify_id_token(jwt)
+
+    return user
 
 
 @app.get("/tickets")

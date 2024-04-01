@@ -13,7 +13,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const IndexPage = () => {
+const indexPage = () => {
   return (
     <>
       <Box sx={{ flexGrow: 1, mt: 15, mb: 15 }}>
@@ -24,9 +24,22 @@ const IndexPage = () => {
                 variant="contained"
                 color="primary"
                 sx={{ width: "50%", height: "4rem", fontSize: "1.2rem" }}
-                href="/home"
+                href="/login"
               >
-                Home
+                Login
+              </Button>
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: "50%", height: "4rem", fontSize: "1.2rem" }}
+                  href="/signup"
+                  disabled
+              >
+                SignUp
               </Button>
             </Box>
           </Grid>
@@ -36,4 +49,4 @@ const IndexPage = () => {
   );
 };
 
-export default IndexPage;
+export default indexPage;
