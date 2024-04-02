@@ -118,21 +118,24 @@ async def get_tickets(
 
 @app.post("/tickets/delete")
 async def delete_ticket(
-        ticketId: str,
+        ticket_data: dict,
         user: User = Depends(validate_token),
         ticket_repository: TicketRepository = Depends(lambda: ticket_repository),
 ):
     try:
-        ticket = ticket_repository.update_ticket_by_id(
+        ticketId = ticket_data.get('ticketId')
+        user_email = user.get('email')
+        ticket_repository.update_ticket_by_id(
             ticketId,
             {
-                "ts_last_status_change": datetime.now(),
-                "deletedAt": datetime.now(),
-                "deletedBy": user.email,
+                "ts_last_status_change": datetime.now().isoformat(),
+                "deletedAt": datetime.now().isoformat(),
+                "deletedBy": user_email,
             }
         )
-        return JSONResponse(ticket, status_code=200)
+        return JSONResponse(ticketId, status_code=200)
     except Exception as e:
+        print('error', e)
         raise HTTPException(status_code=500, detail="Internal Server Error: Failed to delete ticket")
 
 

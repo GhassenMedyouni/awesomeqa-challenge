@@ -4,6 +4,7 @@ from typing import Optional
 
 class TicketRepository:
     def __init__(self, filepath: str):
+        self.filepath = filepath
         with open(filepath) as json_file:
             self.data = json.load(json_file)
 
