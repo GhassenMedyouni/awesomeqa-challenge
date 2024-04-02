@@ -1,6 +1,7 @@
 from app.repositories.ticket_repository import TicketRepository
 import uvicorn
 import pyrebase
+from datetime import datetime
 from fastapi import Depends, FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
@@ -93,25 +94,66 @@ async def create_access_token(user_data: LoginSchema):
 
 @app.post('/ping')
 async def validate_token(request: Request):
-    headers = request.headers
-    jwt = headers.get('authorization')
+    try:
+        headers = request.headers
+        jwt = headers.get('authorization')
+        user = auth.verify_id_token(jwt)
+        return user
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
-    user = auth.verify_id_token(jwt)
 
-    return user
-
-
-@app.get("/tickets")
+@app.get("/tickets/activeList")
 async def get_tickets(
         user: User = Depends(validate_token),
         ticket_repository: TicketRepository = Depends(lambda: ticket_repository),
 ):
     try:
-        tickets = ticket_repository.get_tickets()
-        return JSONResponse(tickets, status_code=200)
+        active_tickets = [ticket for ticket in ticket_repository.get_tickets() if "deletedAt" not in ticket]
+        print('active tickets', len(active_tickets))
+        return JSONResponse(active_tickets, status_code=200)
     except Exception as e:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+        raise HTTPException(status_code=500, detail="Internal Server Error: Failed to retrieve active tickets")
 
+
+@app.post("/tickets/delete")
+async def delete_ticket(
+        ticketId: str,
+        user: User = Depends(validate_token),
+        ticket_repository: TicketRepository = Depends(lambda: ticket_repository),
+):
+    try:
+        ticket = ticket_repository.update_ticket_by_id(
+            ticketId,
+            {
+                "ts_last_status_change": datetime.now(),
+                "deletedAt": datetime.now(),
+                "deletedBy": user.email,
+            }
+        )
+        return JSONResponse(ticket, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Internal Server Error: Failed to delete ticket")
+
+
+@app.post("/tickets/open")
+async def open_ticket(
+        ticketId: str,
+        user: User = Depends(validate_token),
+        ticket_repository: TicketRepository = Depends(lambda: ticket_repository),
+):
+    try:
+        ticket = ticket_repository.update_ticket_by_id(
+            ticketId,
+            {
+                "ts_last_status_change": datetime.now(),
+                "status": "closed",
+                "resolved_by": user.email,
+            }
+        )
+        return JSONResponse(ticket, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Internal Server Error: Failed to open ticket")
 
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=5001, reload=True)
