@@ -6,81 +6,79 @@ import axios from "axios";
 import {CircularProgress, Button, Container} from "@mui/material";
 import styles from "./tickets.module.css"
 
-const handleOpenMessage = (id: string) => {
-    // TODO: ADD API TO OPEN DISCORD CHANNEL
-    console.log('OPENED')
-}
-
-const handleDelete = (id: string) => {
-    // TODO: ADD REMOVE API
-    console.log('OPENED')
-}
-
-const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'msg_id', headerName: 'Message Id', width: 130 },
-    { field: 'resolved_by', headerName: 'Resolved By', width: 150 },
-    {
-        field: 'timestamp',
-        headerName: 'Created At',
-        type: 'string',
-        width: 150,
-        valueGetter: (timestamp: string) => {
-            const date = new Date(timestamp);
-            return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
-        }
-    },
-    {
-        field: 'status',
-        headerName: 'Status',
-        width: 160,
-    },
-    {
-        field: 'context_messages',
-        headerName: 'Context',
-        width: 160,
-    },
-    {
-        field: 'actions',
-        headerName: 'Actions',
-        width: 200,
-        renderCell: (params) => (
-            <div className={styles.actionContainer}>
-                <Button variant="outlined" color="success"
-                        onClick={() => handleOpenMessage(params.row.id)}
-                >
-                    Open
-                </Button>
-                <Button variant="contained" color="error"
-                        onClick={() => handleDelete(params.row.id)}
-                >
-                    Delete
-                </Button>
-
-            </div>
-
-        ),
-    },
-];
-
-
 const Tickets: NextPage = () => {
+
+    const columns: GridColDef[] = [
+        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'msg_id', headerName: 'Message Id', width: 130 },
+        { field: 'resolved_by', headerName: 'Resolved By', width: 150 },
+        {
+            field: 'timestamp',
+            headerName: 'Created At',
+            type: 'string',
+            width: 150,
+            valueGetter: (timestamp: string) => {
+                const date = new Date(timestamp);
+                return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+            }
+        },
+        {
+            field: 'ts_last_status_change',
+            headerName: 'Updated At',
+            type: 'string',
+            width: 150,
+            valueGetter: (timestamp: string) => {
+                const date = new Date(timestamp);
+                return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+            }
+        },
+        {
+            field: 'status',
+            headerName: 'Status',
+            width: 160,
+        },
+        {
+            field: 'context_messages',
+            headerName: 'Context',
+            width: 160,
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 200,
+            renderCell: (params) => (
+                <div className={styles.actionContainer}>
+                    <Button variant="outlined" color="success"
+                            onClick={() => handleOpenMessage(params.row.id)}
+                    >
+                        Open
+                    </Button>
+                    <Button variant="contained" color="error"
+                            onClick={() => handleDelete(params.row.id)}
+                    >
+                        Delete
+                    </Button>
+
+                </div>
+
+            ),
+        },
+    ];
+
 
     const [rows, setRows] = useState([])
     const [loading, setLoading] = useState(true)
-
-
+    const [deleteLoading, setDeleteLoading] = useState(true)
 
 
     useEffect(() => {
         fetchContent()
-        console.log('rows', rows)
     }, [])
 
     const fetchContent = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/tickets`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/tickets/activeList`, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": localStorage.getItem("token")
@@ -95,6 +93,26 @@ const Tickets: NextPage = () => {
             alert(err.message);
         } finally {
             setLoading(false);
+        }
+    }
+
+    const handleDelete = async (id: string) => {
+        try {
+            setDeleteLoading(true)
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/tickets/delete`, {
+                ticketId: id
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": localStorage.getItem("token")
+                }
+            })
+
+            console.log('response')
+        } catch (err) {
+            alert(err.message);
+        } finally {
+            setDeleteLoading(false)
         }
     }
 
