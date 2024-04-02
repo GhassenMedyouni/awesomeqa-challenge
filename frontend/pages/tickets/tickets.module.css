@@ -1,0 +1,27 @@
+.openRow {
+    background-color: dimgrey;
+    text-align: center;
+}
+
+
+.closedRow {
+    text-align: center;
+}
+
+.actionContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+.table {
+    width: 100%;
+}
+.main {
+    min-height: 60vh;
+    padding: 4rem 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

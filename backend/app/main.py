@@ -9,7 +9,7 @@ from fastapi.requests import Request
 
 import firebase_admin
 from firebase_admin import credentials, auth
-from .models import LoginSchema, SignUpSchema
+from .models import LoginSchema, SignUpSchema, User
 
 app = FastAPI(
     docs_url="/docs"
@@ -17,7 +17,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3001"],
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
@@ -103,11 +103,14 @@ async def validate_token(request: Request):
 
 @app.get("/tickets")
 async def get_tickets(
-        limit: int = 20,
+        user: User = Depends(validate_token),
         ticket_repository: TicketRepository = Depends(lambda: ticket_repository),
 ):
-    tickets = ticket_repository.get_tickets(limit)
-    return JSONResponse(tickets, status_code=200)
+    try:
+        tickets = ticket_repository.get_tickets()
+        return JSONResponse(tickets, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 if __name__ == "__main__":

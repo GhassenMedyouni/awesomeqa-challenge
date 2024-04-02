@@ -28,7 +28,7 @@
     font-size: 1.5rem;
 }
 
-.card  {
+.card p {
     margin: 0;
     font-size: 1.25rem;
     line-height: 1.5;
@@ -42,6 +42,7 @@
     width: 51px;
     height: 50px;
     padding: 6px 6px 6px 7px;
+    margin-bottom: 10px;
     gap: 0px;
     border-radius: 8px;
     background: #5D50C333;
