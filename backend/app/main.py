@@ -110,7 +110,6 @@ async def get_tickets(
 ):
     try:
         active_tickets = [ticket for ticket in ticket_repository.get_tickets() if "deletedAt" not in ticket]
-        print('active tickets', len(active_tickets))
         return JSONResponse(active_tickets, status_code=200)
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal Server Error: Failed to retrieve active tickets")
@@ -141,20 +140,22 @@ async def delete_ticket(
 
 @app.post("/tickets/open")
 async def open_ticket(
-        ticketId: str,
+        ticket_data: dict,
         user: User = Depends(validate_token),
         ticket_repository: TicketRepository = Depends(lambda: ticket_repository),
 ):
     try:
-        ticket = ticket_repository.update_ticket_by_id(
+        ticketId = ticket_data.get('ticketId')
+        user_email = user.get('email')
+        ticket_repository.update_ticket_by_id(
             ticketId,
             {
-                "ts_last_status_change": datetime.now(),
-                "status": "closed",
-                "resolved_by": user.email,
+                "ts_last_status_change": datetime.now().isoformat(),
+                "status": "resolved",
+                "resolved_by": user_email,
             }
         )
-        return JSONResponse(ticket, status_code=200)
+        return JSONResponse(ticketId, status_code=200)
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal Server Error: Failed to open ticket")
 
