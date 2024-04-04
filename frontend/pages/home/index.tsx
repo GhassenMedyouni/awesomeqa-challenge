@@ -1,6 +1,6 @@
 import * as React from "react";
 import { NextPage } from "next";
-import { Typography, Grid, Box, CardActionArea, CardContent } from "@mui/material";
+import { Typography, Grid, Box, CardActionArea } from "@mui/material";
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
