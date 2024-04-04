@@ -77,6 +77,12 @@ const LoginPage = () => {
                 <Button disabled={loading} type="submit">
                     {loading ? <CircularProgress size={24} /> : 'Login'}
                 </Button>
+
+                <Typography variant="body2" color="info">
+                    {"You can use this user for login \n" +
+                        "test@awsomeqa.com \n" +
+                        "samplePass123"}
+                </Typography>
             </form>
         </div>
     );

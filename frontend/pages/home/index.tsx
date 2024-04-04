@@ -19,7 +19,7 @@ const Home: NextPage = () => {
       <>
         <Grid className={styles.grid}>
           <Grid item xs={4}>
-              <CardActionArea className={styles.card}>
+              <CardActionArea disabled={true} className={styles.card}>
                   <Box className={styles.iconContainer}>
                       <LibraryBooksIcon className={styles.icon}/>
                   </Box>
@@ -35,7 +35,7 @@ const Home: NextPage = () => {
               </CardActionArea>
           </Grid>
           <Grid item xs={4}>
-              <CardActionArea className={styles.card} >
+              <CardActionArea disabled={true} className={styles.card} >
                   <Box className={styles.iconContainer}>
                       <LightbulbOutlinedIcon  className={styles.icon}/>
                   </Box>
