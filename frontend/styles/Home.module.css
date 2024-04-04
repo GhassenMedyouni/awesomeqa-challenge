@@ -1,9 +1,16 @@
 .container {
-  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input {
+  width: 33vh;
 }
 
 .main {
-  min-height: 80vh;
+  min-height: 60vh;
   padding: 4rem 0;
   flex: 1;
   display: flex;

@@ -1,0 +1,65 @@
+.grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    vertical-align: middle;
+    min-height: 60vh;
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+.card {
+    margin: 10px;
+    padding: 16px 0px 16px 16px;
+    color: inherit;
+    border: 1px solid #302F36;
+    border-radius: 8px;
+    width: 306px;
+    height: 130px;
+    gap: 20px;
+    background-color: #1C1C1F;
+;
+}
+
+
+.card h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+}
+
+.card p {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.5;
+}
+
+
+.iconContainer {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 51px;
+    height: 50px;
+    padding: 6px 6px 6px 7px;
+    margin-bottom: 10px;
+    gap: 0px;
+    border-radius: 8px;
+    background: #5D50C333;
+
+}
+.icon {
+    width: 23px;
+    height: 32px;
+    top: 3px;
+    left: 8px;
+    gap: 0px;
+    color: #FFFFFF;
+}
+
+@media (max-width: 600px) {
+    .grid {
+        width: 100%;
+        flex-direction: column;
+    }
+}
